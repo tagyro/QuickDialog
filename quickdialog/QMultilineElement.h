@@ -13,15 +13,14 @@
 //
 
 
-#import "QEntryElement.h"
-
-@class QMultilineElement;
-@protocol QuickDialogEntryElementDelegate;
+#import "QElement.h"
+#import "QMultilineTextViewController.h"
 
 @interface QMultilineElement : QEntryElement
 
-@property(nonatomic, assign) id< QuickDialogEntryElementDelegate> delegate;
+@property(nonatomic, weak) id< QuickDialogEntryElementDelegate> delegate;
 
+@property int maximumLength;
 
 - (QMultilineElement *)initWithTitle:(NSString *)title value:(NSString *)text;
 

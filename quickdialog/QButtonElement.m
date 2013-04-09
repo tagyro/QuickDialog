@@ -12,9 +12,8 @@
 // permissions and limitations under the License.
 //
 
-#import "QButtonElement.h"
-
 @implementation QButtonElement
+@synthesize enabled = _enabled;
 
 - (QButtonElement *)init {
     self = [super init];
@@ -26,23 +25,35 @@
 
 - (QButtonElement *)initWithTitle:(NSString *)title {
     self = [super initWithTitle:title Value:nil];
-    if (self) {
-        self.enabled = YES;
-    }
+    self.enabled = YES;
     return self;
 }
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
-    QTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuickformButtonElement"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuickformButtonElement"];
     if (cell == nil){
         cell= [[QTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"QuickformButtonElement"];
     }
-    [cell applyAppearanceForElement:self];
+    if (self.enabled) {
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell.textLabel.textColor =  normalButtonColor;//[UIColor colorWithRed:50.0f/255.0f green:79.0f/255.0f blue:133.0f/255.0f alpha:1];
+    } else {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.textColor = [UIColor lightGrayColor];
+    }
+    
+    cell.textLabel.font = medium17;
+    
+    if (self.background) {
+        [cell setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:self.background]]];
+    }
+    if (self.icon) {
+        [cell.imageView setImage:[UIImage imageNamed:self.icon]];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
     cell.textLabel.text = _title;
-    cell.textLabel.textAlignment = self.appearance.buttonAlignment;
-    cell.textLabel.font = self.appearance.labelFont;
-    cell.textLabel.textColor = self.enabled ? self.appearance.actionColorEnabled : self.appearance.actionColorDisabled;
-    cell.userInteractionEnabled = self.enabled;
+    cell.textLabel.textAlignment = UITextAlignmentLeft;
     return cell;
 }
 

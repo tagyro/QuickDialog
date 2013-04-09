@@ -4,7 +4,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "QRadioElement.h"
 
 @interface QSegmentedElement : QRadioElement {
 

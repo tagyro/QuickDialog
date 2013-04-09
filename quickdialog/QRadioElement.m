@@ -13,8 +13,6 @@
 //
 
 #import "QBindingEvaluator.h"
-#import "QRadioElement.h"
-#import "QuickDialog.h"
 
 @implementation QRadioElement {
     QSection *_internalRadioItemsSection;
@@ -23,7 +21,6 @@
 @synthesize selected = _selected;
 @synthesize values = _values;
 @synthesize items = _items;
-@synthesize itemsImageNames = _itemsImageNames;
 
 
 - (void)createElements {
@@ -35,10 +32,7 @@
     [self addSection:_parentSection];
 
     for (NSUInteger i=0; i< [_items count]; i++){
-        QRadioItemElement *element = [[QRadioItemElement alloc] initWithIndex:i RadioElement:self];
-        element.imageNamed = [self.itemsImageNames objectAtIndex:i];
-        element.title = [self.items objectAtIndex:i];
-        [_parentSection addElement:element];
+        [_parentSection addElement:[[QRadioItemElement alloc] initWithIndex:i RadioElement:self]];
     }
 }
 
@@ -53,26 +47,15 @@
 
 -(void)setSelectedValue:(NSObject *)aSelected {
     if ([aSelected isKindOfClass:[NSNumber class]]) {
-        self.selected = [(NSNumber *)aSelected integerValue];
+    _selected = [(NSNumber *)aSelected integerValue];
     } else {
-        self.selected = [_values indexOfObject:aSelected];
+    _selected = [_values indexOfObject:aSelected];
     }
-
-}
-
-- (QEntryElement *)init {
-    self = [super init];
-    if (self) {
-        _selected = -1;
-    }
-
-    return self;
 }
 
 
 - (QRadioElement *)initWithItems:(NSArray *)stringArray selected:(NSInteger)selected {
     self = [self initWithItems:stringArray selected:selected title:nil];
-    _selected = -1;
     return self;
 }
 
@@ -80,7 +63,6 @@
 - (QRadioElement *)initWithDict:(NSDictionary *)valuesDictionary selected:(int)selected title:(NSString *)title {
     self = [self initWithItems:valuesDictionary.allKeys selected:(NSUInteger) selected];
     _values = valuesDictionary.allValues;
-    _selected = -1;
     self.title = title;
     return self;
 }
@@ -110,9 +92,8 @@
 }
 
 - (void)selected:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller indexPath:(NSIndexPath *)path {
-    if ((self.sections == nil) || !self.enabled){
-        return;
-    }
+    if (self.sections==nil)
+            return;
 
     [controller displayViewControllerForRoot:self];
 }
@@ -121,37 +102,28 @@
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
     QEntryTableViewCell *cell = (QEntryTableViewCell *) [super getCellForTableView:tableView controller:controller];
 
-    id selectedValue = nil;
-    if (_selected >= 0 && _selected <_items.count){
-        selectedValue = [_items objectAtIndex:(NSUInteger) _selected];
-    }
+    NSString *selectedValue = nil;
+    if (_selected >= 0 && _selected <_items.count)
+        selectedValue = [[_items objectAtIndex:(NSUInteger) _selected] description];
 
-    [self updateCell:cell selectedValue:selectedValue];
-    cell.accessoryType = self.enabled ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
-    cell.selectionStyle = self.enabled ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
-    cell.textField.userInteractionEnabled = NO;
-    [cell setNeedsLayout];
-    return cell;
-}
-
-- (void)updateCell:(QEntryTableViewCell *)cell selectedValue:(id)selectedValue {
     if (self.title == NULL){
-        cell.textField.text = [selectedValue description];
+        cell.textField.text = selectedValue;
         cell.detailTextLabel.text = nil;
-        cell.textField.textAlignment = self.appearance.labelAlignment;
+        cell.imageView.image = nil;
     } else {
         cell.textLabel.text = _title;
-        cell.textField.text = [selectedValue description];
-        cell.textField.textAlignment = self.appearance.valueAlignment;
+        cell.textField.text = selectedValue;
+        cell.imageView.image = nil;
     }
-    cell.imageView.image = _image;
+    cell.textField.textAlignment = UITextAlignmentRight;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.textField.userInteractionEnabled = NO;
+    return cell;
 }
 
 -(void)setSelected:(NSInteger)aSelected {
     _selected = aSelected;
-
-    self.preselectedElementIndex = [NSIndexPath indexPathForRow:_selected inSection:0];
-    self.image = [UIImage imageNamed:[_itemsImageNames objectAtIndex:(NSUInteger) self.selected]];
 
 }
 

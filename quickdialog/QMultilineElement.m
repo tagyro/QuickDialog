@@ -12,8 +12,6 @@
 // permissions and limitations under the License.
 //
 
-#import "QMultilineElement.h"
-#import "QuickDialog.h"
 @implementation QMultilineElement
 
 @synthesize delegate = _delegate;
@@ -24,7 +22,7 @@
     if (self) {
         self.presentationMode = QPresentationModePopover;
     }
-
+    
     return self;
 }
 
@@ -40,17 +38,29 @@
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
     QEntryTableViewCell *cell = (QEntryTableViewCell *) [super getCellForTableView:tableView controller:controller];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.selectionStyle = self.enabled ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     cell.textField.enabled = NO;
-    cell.textField.textAlignment = self.appearance.labelAlignment;
-
+    //
+    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    if (cell.textLabel.text.length>30) {
+        cell.textLabel.text = [[cell.textLabel.text substringToIndex:30] stringByAppendingFormat:@"..."];
+    }
+    cell.textLabel.textColor = textNormalColor;
+    cell.textLabel.font = regular14;
+    cell.detailTextLabel.textColor = textSubtitleListColor;
+    cell.detailTextLabel.font = regular14;
+    cell.textField.textColor = textNormalColor;
+    cell.textField.font = regular14;
+    //
+    cell.textField.hidden = YES;
+    //
     return cell;
 }
 
 
 - (void)selected:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller indexPath:(NSIndexPath *)indexPath
 {
-    QMultilineTextViewController *textController = [[QMultilineTextViewController alloc] initWithTitle:self.title];
+    __block QMultilineTextViewController *textController = [[QMultilineTextViewController alloc] initWithTitle:self.title];
     textController.entryElement = self;
     textController.entryCell = (QEntryTableViewCell *) [tableView cellForElement:self];
     textController.resizeWhenKeyboardPresented = YES;
@@ -62,12 +72,11 @@
     textController.textView.secureTextEntry = self.secureTextEntry;
     textController.textView.autocapitalizationType = self.autocapitalizationType;
     textController.textView.returnKeyType = self.returnKeyType;
-    textController.textView.editable = self.enabled;
-
-    __weak QMultilineElement *weakSelf = self;
-	__weak QMultilineTextViewController *weakTextController = textController;
+    textController.maximumLength = self.maximumLength;
+    __block QMultilineElement *weakSelf = self;
+    __block QMultilineTextViewController *tController = textController;
     textController.willDisappearCallback = ^ {
-        weakSelf.textValue = weakTextController.textView.text;
+        weakSelf.textValue = tController.textView.text;
         [[tableView cellForElement:weakSelf] setNeedsDisplay];
     };
     [controller displayViewControllerInPopover:textController withNavigation:NO];

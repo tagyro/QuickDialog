@@ -14,9 +14,6 @@
 
 #import "QuickDialogTableView.h"
 
-@class QRootElement;
-@class QuickDialogTableView;
-
 @interface QuickDialogController : UIViewController <UIPopoverControllerDelegate> {
 
 @private

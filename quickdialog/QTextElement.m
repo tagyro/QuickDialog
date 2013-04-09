@@ -20,18 +20,20 @@
 @synthesize text = _text;
 @synthesize font = _font;
 @synthesize color = _color;
-
+@synthesize image = _image;
 
 - (QTextElement *)init {
    self = [super init];
-    _font = [UIFont systemFontOfSize:14];
-    _color = [UIColor blackColor];
+    _font = regular14;// [UIFont systemFontOfSize:14];
+    _color = textNormalColor;// [UIColor blackColor];
+    _image = @"";
     return self;
 }
 
 - (QTextElement *)initWithText:(NSString *)text {
     self = [self init];
     _text = text;
+    _image = @"";
     return self;
 }
 
@@ -41,14 +43,29 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"QuickformText"];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
     cell.detailTextLabel.numberOfLines = 0;
 
-    cell.textLabel.adjustsFontSizeToFitWidth = YES;
+    cell.textLabel.adjustsFontSizeToFitWidth = NO;
     cell.textLabel.text = self.title;
+    cell.textLabel.numberOfLines = 3;
+    
+    cell.textLabel.textColor = textNormalColor;
+    cell.textLabel.font = medium14;
+    
     cell.detailTextLabel.font = _font;
     cell.detailTextLabel.textColor = _color;
     cell.detailTextLabel.text = _text;
+    
+    if (_image!=nil) {
+        if (![_image isEqualToString:@""]) {
+            [cell.imageView setImage:[UIImage imageNamed:_image]];
+        } else {
+            [cell.imageView setImage:nil];
+        }
+    } else {
+        [cell.imageView setImage:nil];
+    }
     
     return cell;
 }
@@ -56,11 +73,11 @@
 
 - (CGFloat)getRowHeightForTableView:(QuickDialogTableView *)tableView {
 
-    if (_text==nil || [_text isEqual: @""]){
+    if (_text==nil || [_text isEqualToString:@""]){
         return [super getRowHeightForTableView:tableView];
     }
     CGSize constraint = CGSizeMake(tableView.frame.size.width-(tableView.root.grouped ? 40.f : 20.f), 20000);
-    CGSize  size= [_text sizeWithFont:_font constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize  size= [_text sizeWithFont:_font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
 	CGFloat predictedHeight = size.height + 20.0f;
     if (self.title!=nil)
         predictedHeight+=30;

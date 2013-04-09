@@ -64,7 +64,7 @@
     _autocompleteLabel.font = self.font;
     _autocompleteLabel.backgroundColor = [UIColor clearColor];
     _autocompleteLabel.textColor = [UIColor lightGrayColor];
-    _autocompleteLabel.lineBreakMode = NSLineBreakByClipping;
+    _autocompleteLabel.lineBreakMode = UILineBreakModeClip;
     [self addSubview:_autocompleteLabel];
     [self bringSubviewToFront:_autocompleteLabel];
     
@@ -83,7 +83,6 @@
         _autocompleteLabel.text = @"";
     }
     
-    [self _tryToUpdateLabelWithNewCompletion];
     _autocompleteLabel.hidden = NO;
     return [super becomeFirstResponder];
 }
@@ -104,18 +103,18 @@
 {
     CGRect returnRect = CGRectZero;
     CGRect textRect = [self textRectForBounds:self.bounds];
-    //    NSLog(@"textRect: %@", NSStringFromCGRect(textRect));
+    //    //NSLog(@"textRect: %@", NSStringFromCGRect(textRect));
     
     CGSize prefixTextSize = [self.text sizeWithFont:self.font
                                   constrainedToSize:textRect.size
-                                      lineBreakMode:NSLineBreakByCharWrapping];
-    //    NSLog(@"prefixTextSize: %@",  NSStringFromCGSize(prefixTextSize));
+                                      lineBreakMode:UILineBreakModeCharacterWrap];
+    //    //NSLog(@"prefixTextSize: %@",  NSStringFromCGSize(prefixTextSize));
     
     CGSize autocompleteTextSize = [_autoCompleteString sizeWithFont:self.font 
                                                   constrainedToSize:CGSizeMake(textRect.size.width-prefixTextSize.width, textRect.size.height)
-                                                      lineBreakMode:NSLineBreakByCharWrapping];
+                                                      lineBreakMode:UILineBreakModeCharacterWrap];
     
-    //    NSLog(@"autocompleteTextSize: %@",  NSStringFromCGSize(autocompleteTextSize)); 
+    //    //NSLog(@"autocompleteTextSize: %@",  NSStringFromCGSize(autocompleteTextSize)); 
     
     returnRect = CGRectMake(textRect.origin.x + prefixTextSize.width,
                             textRect.origin.y,//+.5,
@@ -137,12 +136,7 @@
 
 - (void)_textDidChange:(NSNotification*)notification
 {
-    [self _tryToUpdateLabelWithNewCompletion];
-}
-
-- (void)_tryToUpdateLabelWithNewCompletion
-{
-    if ([((id<DOAutocompleteTextFieldDelegate>)self.delegate) respondsToSelector:@selector(textField:completionForPrefix:)] )
+    if ([((id<DOAutocompleteTextFieldDelegate>)self.delegate) respondsToSelector:@selector(textField:completionForPrefix:)] ) 
     {
         _autoCompleteString = [((id<DOAutocompleteTextFieldDelegate>)self.delegate) textField:self completionForPrefix:self.text];
         [self _updateAutocompleteLabel];

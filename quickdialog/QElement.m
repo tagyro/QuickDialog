@@ -14,16 +14,13 @@
 
 #import <objc/message.h>
 #import "QBindingEvaluator.h"
-#import "QElement.h"
-#import "QuickDialog.h"
 
 @implementation QElement {
 @private
-    id _object;
+    NSObject *_object;
     NSString *_controllerAccessoryAction;
 }
 
-@synthesize enabled = _enabled;
 @synthesize parentSection = _parentSection;
 @synthesize key = _key;
 @synthesize bind = _bind;
@@ -40,42 +37,30 @@
 
 - (QElement *)init {
     self = [super init];
-    if (self) {
-        self.enabled = YES;
-    }
+
     return self;
 }
 
 - (QElement *)initWithKey:(NSString *)key {
     self = [super init];
-    if (self){
-        self.key = key;
-        self.enabled = YES;
-    }
+    self.key = key;
     return self;
 }
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
-    QTableViewCell *cell= [self getOrCreateEmptyCell:tableView];
-
-    [cell applyAppearanceForElement:self];
-
-    cell.textLabel.text = nil; 
-    cell.detailTextLabel.text = nil; 
-    cell.imageView.image = nil; 
-    cell.userInteractionEnabled = self.enabled;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.showsReorderControl = YES;
-    cell.accessoryView = nil;
-    cell.labelingPolicy = _labelingPolicy;
-    return cell;
-}
-
-- (QTableViewCell *)getOrCreateEmptyCell:(QuickDialogTableView *)tableView {
     QTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"QuickformElementCell%@", self.key]];
     if (cell == nil){
         cell = [[QTableViewCell alloc] initWithReuseIdentifier:[NSString stringWithFormat:@"QuickformElementCell%@", self.key]];
     }
+    
+    cell.textLabel.text = nil;
+    cell.detailTextLabel.text = nil;
+    cell.imageView.image = nil; 
+
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.showsReorderControl = YES;
+    cell.accessoryView = nil;
+    cell.labelingPolicy = _labelingPolicy;
     return cell;
 }
 
@@ -88,7 +73,7 @@
         if ([controller respondsToSelector:selector]) {
             objc_msgSend(controller,selector, self);
         }  else {
-            NSLog(@"No method '%@' was found on controller %@", self.controllerAction, [controller class]);
+            //NSLog(@"No method '%@' was found on controller %@", self.controllerAction, [controller class]);
         }
     }
 }
@@ -99,13 +84,14 @@
             if ([controller respondsToSelector:selector]) {
                 objc_msgSend(controller,selector, self);
             }  else {
-                NSLog(@"No method '%@' was found on controller %@", self.controllerAccessoryAction, [controller class]);
+                //NSLog(@"No method '%@' was found on controller %@", self.controllerAccessoryAction, [controller class]);
             }
         }
 }
 
 - (void)selected:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller indexPath:(NSIndexPath *)indexPath {
     [[tableView cellForRowAtIndexPath:indexPath] becomeFirstResponder];
+
     [self handleElementSelected:controller];
 }
 

@@ -12,7 +12,6 @@
 // permissions and limitations under the License.
 //
 
-#import "QBadgeLabel.h"
 
 @implementation QBadgeLabel {
     UIColor *_badgeColor;
@@ -26,7 +25,7 @@
     self.backgroundColor = [UIColor clearColor];
     self.badgeColor = [UIColor colorWithRed:0.530f green:0.600f blue:0.738f alpha:1.000f];
     self.font = [UIFont boldSystemFontOfSize:14];
-    self.textAlignment = NSTextAlignmentCenter;
+    self.textAlignment = UITextAlignmentCenter;
     self.clipsToBounds = NO;
     return self;
 }

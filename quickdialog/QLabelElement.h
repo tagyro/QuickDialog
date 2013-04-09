@@ -27,6 +27,7 @@
 @property(nonatomic, strong) UIImage *image;
 @property(nonatomic, assign) NSString *imageNamed;
 @property(nonatomic, assign) UITableViewCellAccessoryType accessoryType;
+@property(nonatomic, unsafe_unretained) UIView *accessoryView;
 @property(nonatomic, strong) id value;
 
 

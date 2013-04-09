@@ -19,7 +19,6 @@
     NSDate * _dateValue;
 @private
     UIDatePickerMode _mode;
-    NSInteger _minuteInterval;
     BOOL _centerLabel;
 }
 
@@ -28,8 +27,6 @@
 
 @property (assign) UIDatePickerMode mode;
 
-@property (assign) NSInteger minuteInterval;
-
 @property(nonatomic) BOOL centerLabel;
 
 @property(nonatomic, strong) NSDate *maximumDate;
@@ -37,8 +34,9 @@
 @property(nonatomic, strong) NSDate *minimumDate;
 
 
-- (QDateTimeInlineElement *)initWithDate:(NSDate *)date andMode:(UIDatePickerMode)mode;
+- (QDateTimeInlineElement *)initWithDate:(NSDate *)date;
 
-- (QDateTimeInlineElement *)initWithTitle:(NSString *)string date:(NSDate *)date andMode:(UIDatePickerMode)mode;
+- (QDateTimeInlineElement *)initWithTitle:(NSString *)string date:(NSDate *)date;
+
 
 @end

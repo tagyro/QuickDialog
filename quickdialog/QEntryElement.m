@@ -12,8 +12,6 @@
 // permissions and limitations under the License.
 //
 
-#import "QEntryElement.h"
-#import "QuickDialog.h"
 @implementation QEntryElement  {
     __unsafe_unretained QuickDialogController *_controller;
 }
@@ -33,6 +31,7 @@
     if (self){
         self.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         self.autocorrectionType = UITextAutocorrectionTypeDefault;
+        self.textAlignment = UITextAlignmentLeft;
         self.keyboardType = UIKeyboardTypeDefault;
         self.keyboardAppearance = UIKeyboardAppearanceDefault;
         self.returnKeyType = UIReturnKeyDefault;
@@ -53,19 +52,26 @@
 }
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
-
     QEntryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuickformEntryElement"];
-    if (cell==nil){
-        cell = [[QEntryTableViewCell alloc] init];
-    }
-
-    [cell applyAppearanceForElement:self];
+//    if (cell==nil){
+//        cell = [[QEntryTableViewCell alloc] init];
+//    }
+    cell = [[QEntryTableViewCell alloc] init];
     _controller = controller;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textField.enabled = self.enabled;
-    cell.textField.userInteractionEnabled = self.enabled;
-    cell.textField.textAlignment = self.appearance.entryAlignment;
+    cell.textField.font = regular14;
+    cell.textField.textColor = textNormalColor;
+    cell.textField.enabled = YES;
+    cell.textField.userInteractionEnabled = YES;
+    cell.textField.textAlignment = self.textAlignment;
+    if (self.maxLength>0) {
+        cell.maxLength = self.maxLength;
+    }
+    //
     cell.imageView.image = self.image;
+    if (_accessoryType) {
+        cell.accessoryType = _accessoryType;
+    }
     [cell prepareForElement:self inTableView:tableView];
     return cell;
 }
@@ -88,13 +94,17 @@
 }
 
 - (BOOL)canTakeFocus {
-    return self.enabled && !self.hidden;
+	return YES;
 }
+
+#pragma mark UITextFieldDelegate
+
 
 #pragma mark - UITextInputTraits
 
 @synthesize autocorrectionType = _autocorrectionType;
 @synthesize autocapitalizationType = _autocapitalizationType;
+@synthesize textAlignment = _textAlignment;
 @synthesize keyboardType = _keyboardType;
 @synthesize keyboardAppearance = _keyboardAppearance;
 @synthesize returnKeyType = _returnKeyType;

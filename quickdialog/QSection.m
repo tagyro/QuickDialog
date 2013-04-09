@@ -13,12 +13,9 @@
 //
 
 #import "QBindingEvaluator.h"
-#import "QSection.h"
-#import "QuickDialog.h"
 
 @implementation QSection {
 @private
-    id _object;
     NSString *_headerImage;
     NSString *_footerImage;
     NSDictionary *_elementTemplate;
@@ -44,8 +41,6 @@
 
 @synthesize hidden = _hidden;
 @dynamic visibleIndex;
-@synthesize object = _object;
-
 
 - (QElement *)getVisibleElementForIndex:(NSInteger)index
 {
@@ -105,6 +100,15 @@
     self = [super init];
     if (self) {
         self.title = sectionTitle;
+        UIView *headerV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+        UILabel *tLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 5, 320, 20)];
+        tLabel.text = self.title;
+        tLabel.font = medium14;
+        tLabel.textColor = textNormalColor;
+        tLabel.backgroundColor = [UIColor clearColor];
+        [headerV addSubview:tLabel];
+        [headerV setBackgroundColor:[UIColor clearColor]];
+        [self setHeaderView:headerV];
     }
     return self;
 }

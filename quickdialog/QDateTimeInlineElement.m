@@ -13,8 +13,7 @@
 //
 
 #import "QDateEntryTableViewCell.h"
-#import "QDateTimeInlineElement.h"
-#import "QuickDialog.h"
+
 @implementation QDateTimeInlineElement {
 @private
     NSDate *_maximumDate;
@@ -28,29 +27,25 @@
 @synthesize centerLabel = _centerLabel;
 @synthesize maximumDate = _maximumDate;
 @synthesize minimumDate = _minimumDate;
-@synthesize onValueChanged = _onValueChanged;
-@synthesize minuteInterval = _minuteInterval;
 
 
 - (QDateTimeInlineElement *)init {
     self = [super init];
     _dateValue = [NSDate date];
-    self.keepSelected = YES;
     return self;
 }
 
 - (QDateTimeInlineElement *)initWithKey:(NSString *)key {
     self = [super initWithKey:key];
     _dateValue = [NSDate date];
-    self.keepSelected = YES;
     return self;
 }
 
-- (QDateTimeInlineElement *)initWithTitle:(NSString *)string date:(NSDate *)date andMode:(UIDatePickerMode)mode{
+- (QDateTimeInlineElement *)initWithTitle:(NSString *)string date:(NSDate *)date {
     self = [super initWithTitle:string Value:[date description]];
     if (self!=nil){
         _dateValue = date;
-        _mode = mode;
+        _mode = UIDatePickerModeDateAndTime;
     }
     return self;
 }
@@ -60,16 +55,12 @@
     self.dateValue = [NSDate dateWithTimeIntervalSince1970:ticks.doubleValue];
 }
 
-- (void)setDateValue:(NSDate *)date {
-    _dateValue = date;
-}
-
 -(NSNumber *)ticksValue {
     return [NSNumber numberWithDouble:[self.dateValue timeIntervalSince1970]];
 }
 
-- (QDateTimeInlineElement *)initWithDate:(NSDate *)date andMode:(UIDatePickerMode)mode{
-    return [self initWithTitle:nil date:date andMode:mode];
+- (QDateTimeInlineElement *)initWithDate:(NSDate *)date {
+    return [self initWithTitle:nil date:date];
 }
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
@@ -78,23 +69,23 @@
     if (cell==nil){
         cell = [[QDateEntryTableViewCell alloc] init];
     }
+    
+    cell.textField.font = regular14;
+    cell.textField.textColor = textNormalColor;
+    
+    cell.detailTextLabel.font = regular14;
+    cell.detailTextLabel.textColor = textNormalColor;
+    
+    cell.textLabel.font = regular14;
+    cell.textLabel.textColor = textNormalColor;
+    
     [cell prepareForElement:self inTableView:tableView];
-    cell.selectionStyle = self.enabled ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
-    cell.textField.enabled = self.enabled;
-    cell.textField.userInteractionEnabled = self.enabled;
-    cell.imageView.image = self.image;
-    cell.labelingPolicy = self.labelingPolicy;
+    if (self.image) {
+        cell.imageView.image = self.image;
+    }
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue ;
     return cell;
-}
 
-
-- (NSString *)textValue {
-    NSTimeInterval timeInterval = self.dateValue.timeIntervalSinceNow;
-    NSInteger ti = (NSInteger)timeInterval;
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
-    return [NSString stringWithFormat:@"%02i:%02i:%02i", hours, minutes, seconds];
 }
 
 - (void)fetchValueIntoObject:(id)obj {
@@ -102,6 +93,5 @@
 		return;
     [obj setValue:_dateValue forKey:_key];
 }
-
 
 @end

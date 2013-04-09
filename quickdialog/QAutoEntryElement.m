@@ -12,8 +12,6 @@
 // ANY KIND, either express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 //
-#import "QAutoEntryElement.h"
-#import "QuickDialog.h"
 
 @implementation QAutoEntryElement
 
@@ -54,25 +52,18 @@
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
     
-    QAutoEntryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuickformAutoEntryElement"];
+    QAutoEntryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuickformEntryElement"];
     if (cell==nil){
         cell = [[QAutoEntryTableViewCell alloc] init];
     }
-
-    [cell applyAppearanceForElement:self];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textField.enabled = self.enabled;
-    cell.textField.userInteractionEnabled = self.enabled;
-    cell.textField.textAlignment = self.appearance.entryAlignment;
-    cell.imageView.image = self.image;
+    
     [cell prepareForElement:self inTableView:tableView];
     return cell;
 }
 
 - (void)selected:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller indexPath:(NSIndexPath *)indexPath {
-    if(self.enabled){
-        [super selected:tableView controller:controller indexPath:indexPath];
-    }
+    [super selected:tableView controller:controller indexPath:indexPath];
+    
 }
 
 - (void)fetchValueIntoObject:(id)obj {

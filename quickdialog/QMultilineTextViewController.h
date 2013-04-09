@@ -19,9 +19,13 @@
 @class QMultilineElement;
 @class QEntryTableViewCell;
 
-@interface QMultilineTextViewController : UIViewController <UITextViewDelegate>
+@interface QMultilineTextViewController : UIViewController <UITextViewDelegate> {
+    UIView *backView;
+}
 
 @property (nonatomic, strong, readonly) UITextView *textView;
+
+@property (nonatomic, strong) UILabel *counter;
 
 @property(nonatomic, assign) BOOL resizeWhenKeyboardPresented;
 
@@ -30,6 +34,9 @@
 @property(nonatomic, strong) QMultilineElement *entryElement;
 
 @property(nonatomic, strong) QEntryTableViewCell *entryCell;
+
+@property int minimumLength;
+@property int maximumLength;
 
 - (id)initWithTitle:(NSString *)title;
 

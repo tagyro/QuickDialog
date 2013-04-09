@@ -12,15 +12,14 @@
 // permissions and limitations under the License.
 //
 
+#import "QElement.h"
+#import "QSection.h"
 #import "QuickDialogStyleProvider.h"
 #import "QuickDialogDataSource.h"
 #import "QuickDialogTableDelegate.h"
+#import "QRootElement.h"
 #import <Foundation/Foundation.h>
 #import "UIKit/UIKit.h"
-
-@class QSection;
-@class QElement;
-@class QRootElement;
 
 @interface QuickDialogTableView : UITableView {
 
@@ -42,10 +41,12 @@
 
 - (QuickDialogTableView *)initWithController:(QuickDialogController *)controller;
 
+- (NSIndexPath *)indexForElement:(QElement *)element;
+
 - (UITableViewCell *)cellForElement:(QElement *)element;
 
 - (void)viewWillAppear;
 
-- (void)reloadCellForElements:(QElement *)element, ... NS_REQUIRES_NIL_TERMINATION;
+- (void)reloadCellForElements:(QElement *)element, ...;
 
 @end

@@ -16,6 +16,11 @@
 
 @interface QButtonElement : QLabelElement
 
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
+
+@property (strong, nonatomic) NSString *icon;
+@property (strong, nonatomic) NSString *background;
+
 - (QButtonElement *)init;
 
 - (QButtonElement *)initWithTitle:(NSString *)title;

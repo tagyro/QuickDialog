@@ -14,7 +14,6 @@
 
 #import "QuickDialogDataSource.h"
 #import "QSortingSection.h"
-#import "QuickDialog.h"
 
 @implementation QuickDialogDataSource
 
@@ -27,7 +26,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_tableView.root getVisibleSectionForIndex:section].visibleNumberOfElements;
+    return [_tableView.root getSectionForIndex:section].visibleNumberOfElements;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -73,7 +72,5 @@
     }
     return tableView.editing;
 }
-
-
 
 @end

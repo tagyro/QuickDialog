@@ -1,5 +1,4 @@
 #import "QDynamicDataSection.h"
-#import "QuickDialog.h"
 
 @implementation QDynamicDataSection {
     NSString *_emptyMessage;

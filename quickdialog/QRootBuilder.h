@@ -13,7 +13,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QuickDialog.h"
+#import "quickdialog.h"
 
 @interface QRootBuilder : NSObject {
 

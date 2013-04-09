@@ -12,6 +12,7 @@
 
 - (id)objectFromComponentsValues:(NSArray *)componentsValues
 {
+    //NSLog(@"obj from comps");
     return [componentsValues componentsJoinedByString:@"\t"];
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "QPickerTableViewCell.h"
-#import "QuickDialog.h"
 
 NSString * const QPickerTableViewCellIdentifier = @"QPickerTableViewCell";
 
@@ -83,11 +82,14 @@ NSString * const QPickerTableViewCellIdentifier = @"QPickerTableViewCell";
         self.detailTextLabel.text = [pickerElement.valueParser presentationOfObject:pickerElement.value];
         _textField.text = [pickerElement.valueParser presentationOfObject:pickerElement.value];
     } else {
-        self.detailTextLabel.text = [pickerElement.value description];
-        _textField.text = [pickerElement.value description];
+        NSString *temp = [pickerElement.value description];
+        temp = [temp stringByReplacingOccurrencesOfString:@"\t" withString:@" - "];
+        self.detailTextLabel.text = temp;//[pickerElement.value description];
+        _textField.text = temp;//[pickerElement.value description];
+        ////NSLog(@">%@",_textField.text);
     }
     
-    [self setNeedsLayout];
+    [self setNeedsDisplay];
 }
 
 #pragma mark - UIPickerView data source and delegate
@@ -109,12 +111,11 @@ NSString * const QPickerTableViewCellIdentifier = @"QPickerTableViewCell";
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    if (self.pickerElement.onValueChanged != nil) {
-        self.pickerElement.onValueChanged(self.pickerElement);
-    }
-
     self.pickerElement.value = [self getPickerViewValue];
     [self prepareForElement:_entryElement inTableView:_quickformTableView];
+    if (self.pickerElement.onValueChanged != nil) {
+        self.pickerElement.onValueChanged();
+    }
 }
 
 #pragma mark - Getting/setting value from UIPickerView
@@ -133,7 +134,7 @@ NSString * const QPickerTableViewCellIdentifier = @"QPickerTableViewCell";
         }
     }
 
-    NSLog(@"AA%@", [self.pickerElement.valueParser objectFromComponentsValues:componentsValues]);
+    ////NSLog(@"AA%@", [self.pickerElement.valueParser objectFromComponentsValues:componentsValues]);
     return [self.pickerElement.valueParser objectFromComponentsValues:componentsValues];
 }
 
@@ -141,13 +142,11 @@ NSString * const QPickerTableViewCellIdentifier = @"QPickerTableViewCell";
 {
     NSArray *componentsValues = [self.pickerElement.valueParser componentsValuesFromObject:value];
     
-    for (int componentIndex = 0; componentIndex < componentsValues.count && componentIndex < _pickerView.numberOfComponents; componentIndex++)
+    for (int componentIndex = 0; componentIndex < componentsValues.count && _pickerView.numberOfComponents; componentIndex++)
     {
         id componentValue = [componentsValues objectAtIndex:(NSUInteger) componentIndex];
         NSInteger rowIndex = [[self.pickerElement.items objectAtIndex:componentIndex] indexOfObject:componentValue];
-        if (rowIndex != NSNotFound) {
-            [_pickerView selectRow:rowIndex inComponent:componentIndex animated:YES];
-        }
+        [_pickerView selectRow:rowIndex inComponent:componentIndex animated:YES];
     }
 }
 

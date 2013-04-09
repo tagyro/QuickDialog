@@ -14,15 +14,13 @@
 
 #import <objc/message.h>
 
-#import "QBooleanElement.h"
-#import "QuickDialogController.h"
-
 @implementation QBooleanElement {
     __unsafe_unretained QuickDialogController *_controller;
 }
 @synthesize onImage = _onImage;
 @synthesize offImage = _offImage;
 @synthesize boolValue = _boolValue;
+@synthesize enabled = _enabled;
 
 
 - (QBooleanElement *)init {
@@ -88,7 +86,16 @@
     else if ([cell.accessoryView class] == [UISwitch class]) {
         [((UISwitch *)cell.accessoryView) setOn:self.boolValue animated:YES];
     }
-
+    //
+    if ([cell.accessoryView class] == [UIButton class]) {
+        ((UIButton *)cell.accessoryView).selected = self.boolValue;
+        [(UIButton *)cell.accessoryView sendActionsForControlEvents:UIControlEventValueChanged];
+    }
+    else if ([cell.accessoryView class] == [UISwitch class]) {
+        [((UISwitch *)cell.accessoryView) setOn:self.boolValue animated:YES];
+        [(UISwitch *)cell.accessoryView sendActionsForControlEvents:UIControlEventValueChanged];
+    }
+    //
     if (self.controllerAction==nil)
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self handleElementSelected:controller];
@@ -102,15 +109,8 @@
         if ([_controller respondsToSelector:selector]) {
             objc_msgSend(_controller,selector, self);
         }  else {
-            NSLog(@"No method '%@' was found on controller %@", self.controllerAccessoryAction, [_controller class]);
+            //NSLog(@"No method '%@' was found on controller %@", self.controllerAccessoryAction, [_controller class]);
         }
-    }
-}
-
--(void)setBoolValue:(BOOL)boolValue {
-    _boolValue = boolValue;
-    if (self.onValueChanged!=nil){
-        self.onValueChanged(self);
     }
 }
 
@@ -119,6 +119,9 @@
     if ((_controller != nil && self.controllerAction != nil) || _onSelected != nil) {
         [self handleElementSelected:_controller];
     }
+    if (self.onValueChanged!=nil){
+        self.onValueChanged();
+    }
 }
 
 - (void)fetchValueIntoObject:(id)obj {
@@ -126,18 +129,6 @@
 		return;
     [obj setValue:[NSNumber numberWithBool:self.boolValue] forKey:_key];
 }
-
-
-- (void)setNilValueForKey:(NSString *)key;
-{
-    if ([key isEqualToString:@"boolValue"]){
-        self.boolValue = NO;
-    }
-    else {
-        [super setNilValueForKey:key];
-    }
-}
-
 
 
 @end

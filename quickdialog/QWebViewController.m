@@ -15,8 +15,8 @@
 #import "QWebViewController.h"
 
 @interface QWebViewController ()
-- (UIImage *)createBackArrowImage;
-- (UIImage *)createForwardArrowImage;
+- (CGImageRef)createBackArrowImageRef;
+- (CGImageRef)createForwardArrowImageRef;
 
 
 @end
@@ -26,62 +26,31 @@
     UIBarButtonItem * _btForward;
     BOOL _firstPageFinished;
     BOOL _previousToolbarState;
-    NSArray *_urlToolbarItems;
 }
-- (QWebViewController *)initWithHTML:(NSString *)html {
-	
-    self = [super init];
-    if (self!=nil){
-        _html = html;
-
-        self.hidesBottomBarWhenPushed = YES;
-    }
-    return self;
-}
-
-- (void)loadView {
-    [super loadView];
-    _webView = [[UIWebView alloc] init];
-    _webView.delegate = self;
-    _webView.scalesPageToFit = YES;
-    self.view = _webView;
-
-    UIImage *backImage = [self createBackArrowImage];
-    UIImage *forwardImage = [self createForwardArrowImage];
-    _btBack = [[UIBarButtonItem alloc] initWithImage:backImage style:UIBarButtonItemStylePlain target:self action:@selector(actionRewind)];
-    _btForward = [[UIBarButtonItem alloc] initWithImage:forwardImage style:UIBarButtonItemStylePlain target:self action:@selector(actionForward)];
-
-    _btBack.enabled = NO;
-    _btForward.enabled = NO;
-
-    UIBarButtonItem *spacer1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-  		spacer1.width = 30;
-  		UIBarButtonItem *spacer2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-  		spacer2.width = 30;
-    _urlToolbarItems = [NSArray arrayWithObjects:
-              _btBack,
-              spacer1,
-              _btForward,
-              [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-              [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(actionRefresh)],
-              spacer2,
-              [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionGoToSafari)],
-              nil];
-}
-
-
 - (QWebViewController *)initWithUrl:(NSString *)url {
 
     self = [super init];
     if (self!=nil){
+        _webView = [[UIWebView alloc] init];
+        _webView.delegate = self;
+        _webView.scalesPageToFit = YES;
         _url = url;
+        self.view = _webView;
+        
+        UIImage *backImage = [[UIImage alloc] initWithCGImage:[self createBackArrowImageRef]];
+        UIImage *forwardImage = [[UIImage alloc] initWithCGImage:[self createForwardArrowImageRef]];
+        _btBack = [[UIBarButtonItem alloc] initWithImage:backImage style:UIBarButtonItemStylePlain target:self action:@selector(actionRewind)];
+        _btForward = [[UIBarButtonItem alloc] initWithImage:forwardImage style:UIBarButtonItemStylePlain target:self action:@selector(actionForward)];
+        
+        _btBack.enabled = NO;
+        _btForward.enabled = NO;
+
         self.hidesBottomBarWhenPushed = YES;
     }
     return self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
     [_webView stopLoading];
     [self.navigationController setToolbarHidden:_previousToolbarState animated:YES];
     _webView = nil;
@@ -111,20 +80,24 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	
-	_previousToolbarState = self.navigationController.toolbarHidden;
+    [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_url]]];
+    _previousToolbarState = self.navigationController.toolbarHidden;
+    self.navigationController.toolbarHidden = NO;
 
-	if (_html) {
-        [_webView loadHTMLString:_html baseURL:nil];
-		self.navigationController.toolbarHidden = YES;
-        self.toolbarItems = nil;
-	}
-	else {
-		[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_url]]];
-		self.navigationController.toolbarHidden = NO;
-
-        self.toolbarItems = _urlToolbarItems;
-	}
+    UIBarButtonItem *spacer1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spacer1.width = 30;
+    UIBarButtonItem *spacer2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spacer2.width = 30;
+    self.toolbarItems = [NSArray arrayWithObjects:
+            _btBack,
+            spacer1,
+            _btForward,
+            [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+            [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(actionRefresh)],
+            spacer2,        
+            [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionGoToSafari)],
+            nil];
+    
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -135,10 +108,7 @@
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     [indicator startAnimating];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:indicator];
-
-    if (_url!=nil) {
-        self.title = @"Loading";
-    }
+    self.title = @"Loading";
     if (_firstPageFinished==YES){
         _btBack.enabled = YES;
     }
@@ -146,10 +116,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     self.navigationItem.rightBarButtonItem = nil;
-    NSString *titleFromHTML = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    if (titleFromHTML!=nil && ![titleFromHTML isEqualToString:@""])
-        self.title = titleFromHTML;
-
+    self.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     _firstPageFinished = YES;
 }
 
@@ -162,11 +129,17 @@
 }
 
 
-- (UIImage *)createBackArrowImage
+- (CGContextRef)createContext
 {
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGContextRef context = CGBitmapContextCreate(nil,27,27,8,0, colorSpace,kCGImageAlphaPremultipliedLast);
-	CFRelease(colorSpace);
+   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+   CGContextRef context = CGBitmapContextCreate(nil,27,27,8,0, colorSpace,kCGImageAlphaPremultipliedLast);
+   CFRelease(colorSpace);
+   return context;
+}
+
+- (CGImageRef)createBackArrowImageRef
+{
+   CGContextRef context = [self createContext];
    CGColorRef fillColor = [[UIColor blackColor] CGColor];
    CGContextSetFillColor(context, (CGFloat *) CGColorGetComponents(fillColor));
    CGContextBeginPath(context);
@@ -177,17 +150,12 @@
    CGContextFillPath(context);
    CGImageRef image = CGBitmapContextCreateImage(context);
    CGContextRelease(context);
-   UIImage *ret = [UIImage imageWithCGImage:image];
-   CGImageRelease(image);
-    
-   return ret;
+   return image;
 }
 
-- (UIImage *)createForwardArrowImage
+- (CGImageRef)createForwardArrowImageRef
 {
-   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-   CGContextRef context = CGBitmapContextCreate(nil,27,27,8,0, colorSpace,kCGImageAlphaPremultipliedLast);
-   CFRelease(colorSpace);
+   CGContextRef context = [self createContext];
    CGColorRef fillColor = [[UIColor blackColor] CGColor];
    CGContextSetFillColor(context, (CGFloat *) CGColorGetComponents(fillColor));
    CGContextBeginPath(context);
@@ -198,10 +166,7 @@
    CGContextFillPath(context);
    CGImageRef image = CGBitmapContextCreateImage(context);
    CGContextRelease(context);
-   UIImage *ret = [UIImage imageWithCGImage:image];
-   CGImageRelease(image);
-    
-   return ret;
+   return image;
 }
 
 @end

@@ -57,8 +57,7 @@
 @property(nonatomic, readonly) NSUInteger visibleIndex;
 
 @property(nonatomic, assign) BOOL canDeleteRows;
-@property(nonatomic, strong) id object;
-
+@property (strong, nonatomic) NSMutableArray *selections;
 
 - (QSection *)initWithTitle:(NSString *)string;
 

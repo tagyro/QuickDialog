@@ -17,7 +17,6 @@
 {
     if (self = [super init]) {
         self.valueParser = [QPickerTabDelimitedStringParser new];
-        self.keepSelected = YES;
     }
     return self;
 }
@@ -37,11 +36,19 @@
     if (cell == nil) {
         cell = [[QPickerTableViewCell alloc] init];
     }
-    [cell applyAppearanceForElement:self];
 
     UIPickerView *pickerView = nil;
     [cell prepareForElement:self inTableView:tableView pickerView:&pickerView];
     _pickerView = pickerView;
+    
+    cell.textLabel.textColor = textNormalColor;
+    cell.textLabel.font = regular14;
+    
+    cell.detailTextLabel.textColor = textNormalColor;
+    cell.detailTextLabel.font = regular14;
+    
+    cell.textField.textColor = textNormalColor;
+    cell.textField.font = regular14;
     
     cell.imageView.image = self.image;
     
@@ -64,13 +71,4 @@
     return selectedIndexes;
 }
 
-- (void)reloadAllComponents
-{
-    [_pickerView reloadAllComponents];
-}
-
-- (void)reloadComponent:(NSInteger)index
-{
-    [_pickerView reloadComponent:index];
-}
 @end

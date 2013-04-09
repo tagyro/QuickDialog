@@ -13,8 +13,6 @@
 //
 
 #import "QBadgeTableCell.h"
-#import "QBadgeElement.h"
-#import "QuickDialog.h"
 
 @implementation QBadgeElement {
 
@@ -32,23 +30,22 @@
 
 - (QBadgeElement *)initWithTitle:(NSString *)title Value:(NSString *)value {
     self = [self init];
-	if (self) {
-		_title = title;
-		_badge = value;
-	}
+    _title = title;
+    _badge = value;
     return self;
 }
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
     QBadgeTableCell *cell = [[QBadgeTableCell alloc] init];
     cell.textLabel.text = _title;
-    [cell applyAppearanceForElement:self];
     cell.badgeLabel.badgeColor = _badgeColor;
     cell.badgeLabel.textColor = _badgeTextColor;
     cell.badgeLabel.text = _badge;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.imageView.image = _image;
+    if (_image) {
+        cell.imageView.image = _image;
+    }
     cell.accessoryType = self.sections!= nil || self.controllerAction!=nil ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     cell.selectionStyle = self.sections!= nil || self.controllerAction!=nil ? UITableViewCellSelectionStyleBlue: UITableViewCellSelectionStyleNone;
     return cell;

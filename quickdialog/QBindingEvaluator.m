@@ -13,7 +13,6 @@
 //
 
 #import "QBindingEvaluator.h"
-#import "QuickDialog.h"
 
 @interface QBindingEvaluator ()
 + (BOOL)stringIsEmpty:(NSString *)aString;

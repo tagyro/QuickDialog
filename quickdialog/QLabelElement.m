@@ -24,6 +24,7 @@
 @synthesize image = _image;
 @synthesize value = _value;
 @synthesize accessoryType = _accessoryType;
+@synthesize accessoryView = _accessoryView;
 @synthesize keepSelected = _keepSelected;
 
 
@@ -32,6 +33,7 @@
     _title = title;
     _value = value;
     _keepSelected = YES;
+    _image = nil;
     return self;
 }
 
@@ -46,9 +48,22 @@
 
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
     QTableViewCell *cell = (QTableViewCell *) [super getCellForTableView:tableView controller:controller];
+    cell.accessoryType = _accessoryType== (int) nil ? UITableViewCellAccessoryNone : _accessoryType;
+    if (_accessoryView) {
+        cell.accessoryView = _accessoryView;
+    }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
     cell.textLabel.text = _title;
+    //
+    cell.textLabel.font = medium14;
+    cell.textLabel.textColor = textNormalColor;
+    //
     cell.detailTextLabel.text = [_value description];
+    //
+    cell.detailTextLabel.font = regular14;
+    cell.detailTextLabel.textColor = textNormalColor;
+    //
     cell.imageView.image = _image;
     cell.accessoryType = _accessoryType != UITableViewCellAccessoryNone ? _accessoryType : ( self.sections!= nil || self.controllerAction!=nil ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone);
     cell.selectionStyle = self.sections!= nil || self.controllerAction!=nil ? UITableViewCellSelectionStyleBlue: UITableViewCellSelectionStyleNone;

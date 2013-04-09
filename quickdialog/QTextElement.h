@@ -15,19 +15,18 @@
 
 #import "QElement.h"
 
-#import "QRootElement.h"
-
 @interface QTextElement : QRootElement {
 
 @protected
     NSString *_text;
     UIFont *_font;
     UIColor *_color;
+    NSString *_image;
 }
 
 @property(nonatomic, strong) NSString *text;
 @property(nonatomic, strong) UIFont *font;
-
+@property (nonatomic, strong) NSString *image;
 
 @property(nonatomic, retain) UIColor *color;
 

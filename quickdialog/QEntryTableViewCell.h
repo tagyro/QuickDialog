@@ -14,14 +14,12 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "QTableViewCell.h"
-
+#import "QuickDialog.h"
 
 
 @class QEntryElement;
 @class QuickDialogTableView;
 @class QTextField;
-@class QImageElement;
 
 
 @interface QEntryTableViewCell : QTableViewCell<UITextFieldDelegate> {
@@ -34,6 +32,7 @@
 }
 
 @property(nonatomic, strong) QTextField *textField;
+@property (nonatomic) int maxLength;
 
 - (void)updatePrevNextStatus;
 
@@ -54,6 +53,5 @@
 
 - (void)recalculateEntryFieldPosition;
 
-- (void)handleEditingChanged;
 
 @end

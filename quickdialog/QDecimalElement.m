@@ -39,18 +39,15 @@
     return self;
 }
 
-
 - (UITableViewCell *)getCellForTableView:(QuickDialogTableView *)tableView controller:(QuickDialogController *)controller {
 
     QDecimalTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuickformDecimalElement"];
     if (cell==nil){
         cell = [[QDecimalTableViewCell alloc] init];
     }
-    self.keyboardType = UIKeyboardTypeDecimalPad;
     [cell prepareForElement:self inTableView:tableView];
-    cell.textField.userInteractionEnabled = self.enabled;
-
     return cell;
+
 }
 
 - (void)fetchValueIntoObject:(id)obj {
