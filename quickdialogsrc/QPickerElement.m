@@ -17,6 +17,7 @@
 {
     if (self = [super init]) {
         self.valueParser = [QPickerTabDelimitedStringParser new];
+        self.suffix = @"";
     }
     return self;
 }
@@ -25,6 +26,16 @@
 {
     if ((self = [super initWithTitle:title Value:value])) {
         _items = items;
+        self.valueParser = [QPickerTabDelimitedStringParser new];
+        _suffix = @"";
+    }
+    return self;
+}
+
+- (QPickerElement *)initWithTitle:(NSString *)title items:(NSArray *)items value:(id)value suffix:(NSString*)aSuffix {
+    if ((self = [super initWithTitle:title Value:value suffix:aSuffix])) {
+        _items = items;
+        _suffix = aSuffix;
         self.valueParser = [QPickerTabDelimitedStringParser new];
     }
     return self;
@@ -36,9 +47,11 @@
     if (cell == nil) {
         cell = [[QPickerTableViewCell alloc] init];
     }
+    
+//    QPickerTableViewCell *cell = [[QPickerTableViewCell alloc] init];
 
     UIPickerView *pickerView = nil;
-    [cell prepareForElement:self inTableView:tableView pickerView:&pickerView];
+    [cell prepareForElement:self inTableView:tableView pickerView:&pickerView suffix:_suffix];
     _pickerView = pickerView;
     
     cell.textLabel.textColor = textNormalColor;
@@ -51,7 +64,7 @@
     cell.textField.font = regular14;
     
     cell.imageView.image = self.image;
-    
+
     return cell;
 }
 

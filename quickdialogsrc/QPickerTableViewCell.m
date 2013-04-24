@@ -72,24 +72,55 @@ NSString * const QPickerTableViewCellIdentifier = @"QPickerTableViewCell";
     *pickerView = _pickerView;
 }
 
+- (void)prepareForElement:(QEntryElement *)element inTableView:(QuickDialogTableView *)tableView pickerView:(UIPickerView **)pickerView suffix:(NSString*)aSuffix
+{
+    _pickerView = [[UIPickerView alloc] init];
+    _pickerView.showsSelectionIndicator = YES;
+    _pickerView.dataSource = self;
+    _pickerView.delegate = self;
+    if (aSuffix.length>0) {
+        self.suffix = aSuffix;
+    } else {
+        self.suffix = @"";
+    }
+    *pickerView = _pickerView;
+    //
+    [self prepareForElement:element inTableView:tableView];
+}
+
 - (void)prepareForElement:(QEntryElement *)element inTableView:(QuickDialogTableView *)tableView
 {
     [super prepareForElement:element inTableView:tableView];
-    
     QPickerElement *pickerElement = (QPickerElement *)element;
-
     if ([pickerElement.valueParser respondsToSelector:@selector(presentationOfObject:)]) {
-        self.detailTextLabel.text = [pickerElement.valueParser presentationOfObject:pickerElement.value];
-        _textField.text = [pickerElement.valueParser presentationOfObject:pickerElement.value];
+        if (_suffix.length>0) {
+            self.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@",[pickerElement.valueParser presentationOfObject:pickerElement.value],_suffix];
+        } else {
+            self.detailTextLabel.text = [pickerElement.valueParser presentationOfObject:pickerElement.value];
+        }
+        _textField.text = self.detailTextLabel.text;
     } else {
         NSString *temp = [pickerElement.value description];
         temp = [temp stringByReplacingOccurrencesOfString:@"\t" withString:@" - "];
-        self.detailTextLabel.text = temp;//[pickerElement.value description];
-        _textField.text = temp;//[pickerElement.value description];
-        ////NSLog(@">%@",_textField.text);
+        if (self.suffix.length>0) {
+            if (temp.length>0) {
+                self.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@",temp,self.suffix];
+            } else {
+                self.detailTextLabel.text = temp;
+            }
+        } else {
+            self.detailTextLabel.text = temp;//[pickerElement.value description];
+        }
+        //
+        _textField.text = self.detailTextLabel.text;
     }
     
     [self setNeedsDisplay];
+}
+
+-(void)prepareForReuse {
+    self.suffix = @"";
+    _pickerView = nil;
 }
 
 #pragma mark - UIPickerView data source and delegate

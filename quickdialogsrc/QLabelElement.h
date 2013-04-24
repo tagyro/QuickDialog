@@ -22,10 +22,12 @@
 @protected
     id _value;
     UIImage *_image;
+    NSString *_suffix;
 }
 
 @property(nonatomic, strong) UIImage *image;
 @property(nonatomic, assign) NSString *imageNamed;
+@property(nonatomic, strong) NSString *suffix;
 @property(nonatomic, assign) UITableViewCellAccessoryType accessoryType;
 @property(nonatomic, unsafe_unretained) UIView *accessoryView;
 @property(nonatomic, strong) id value;
@@ -33,6 +35,7 @@
 
 @property(nonatomic) BOOL keepSelected;
 
-- (QLabelElement *)initWithTitle:(NSString *)string Value:(id)value;
+- (QLabelElement *)initWithTitle:(NSString *)title Value:(id)value;
+- (QLabelElement *)initWithTitle:(NSString *)title Value:(id)value suffix:(NSString*)aSuffix;
 
 @end

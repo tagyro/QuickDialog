@@ -22,13 +22,16 @@
     UIFont *_font;
     UIColor *_color;
     NSString *_image;
+    NSString *_suffix;
 }
 
 @property(nonatomic, strong) NSString *text;
 @property(nonatomic, strong) UIFont *font;
 @property (nonatomic, strong) NSString *image;
+@property (nonatomic, strong) NSString *suffix;
 
 @property(nonatomic, retain) UIColor *color;
 
 - (QTextElement *)initWithText:(NSString *)string;
+- (QTextElement *)initWithText:(NSString *)text andSuffix:(NSString*)aSuffix;
 @end

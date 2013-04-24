@@ -26,7 +26,7 @@
 @synthesize accessoryType = _accessoryType;
 @synthesize accessoryView = _accessoryView;
 @synthesize keepSelected = _keepSelected;
-
+@synthesize suffix = _suffix;
 
 - (QLabelElement *)initWithTitle:(NSString *)title Value:(id)value {
     self = [super init];
@@ -34,6 +34,16 @@
     _value = value;
     _keepSelected = YES;
     _image = nil;
+    return self;
+}
+
+- (QLabelElement *)initWithTitle:(NSString *)title Value:(id)value suffix:(NSString*)aSuffix {
+    self = [super init];
+    _title = title;
+    _value = value;
+    _keepSelected = YES;
+    _image = nil;
+    _suffix = aSuffix;
     return self;
 }
 
@@ -59,7 +69,11 @@
     cell.textLabel.font = medium14;
     cell.textLabel.textColor = textNormalColor;
     //
-    cell.detailTextLabel.text = [_value description];
+    if (_suffix.length>0) {
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@",[_value description],_suffix];
+    } else {
+        cell.detailTextLabel.text = [_value description];
+    }
     //
     cell.detailTextLabel.font = regular14;
     cell.detailTextLabel.textColor = textNormalColor;

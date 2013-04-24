@@ -14,5 +14,6 @@
 @property (nonatomic, readonly) NSArray *selectedIndexes;
 
 - (QPickerElement *)initWithTitle:(NSString *)title items:(NSArray *)items value:(id)value;
+- (QPickerElement *)initWithTitle:(NSString *)title items:(NSArray *)items value:(id)value suffix:(NSString*)aSuffix;
 
 @end

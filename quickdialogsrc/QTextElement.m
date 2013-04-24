@@ -27,6 +27,7 @@
     _font = regular14;// [UIFont systemFontOfSize:14];
     _color = textNormalColor;// [UIColor blackColor];
     _image = @"";
+    _suffix = @"";
     return self;
 }
 
@@ -34,6 +35,14 @@
     self = [self init];
     _text = text;
     _image = @"";
+    return self;
+}
+
+- (QTextElement *)initWithText:(NSString *)text andSuffix:(NSString*)aSuffix {
+    self = [self init];
+    _text = text;
+    _image = @"";
+    _suffix = aSuffix;
     return self;
 }
 
@@ -55,7 +64,7 @@
     
     cell.detailTextLabel.font = _font;
     cell.detailTextLabel.textColor = _color;
-    cell.detailTextLabel.text = _text;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@",_text,_suffix];
     
     if (_image!=nil) {
         if (![_image isEqualToString:@""]) {
