@@ -24,7 +24,7 @@
 
 - (QTextElement *)init {
    self = [super init];
-    _font = regular14;// [UIFont systemFontOfSize:14];
+    _font = medium14;// [UIFont systemFontOfSize:14];
     _color = textNormalColor;// [UIColor blackColor];
     _image = @"";
     _suffix = @"";

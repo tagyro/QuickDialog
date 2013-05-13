@@ -58,7 +58,7 @@
     cell = [[QEntryTableViewCell alloc] init];
     _controller = controller;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textField.font = regular14;
+    cell.textField.font = medium14;
     cell.textField.textColor = textNormalColor;
     cell.textField.enabled = YES;
     cell.textField.userInteractionEnabled = YES;

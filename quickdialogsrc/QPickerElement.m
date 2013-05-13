@@ -55,13 +55,13 @@
     _pickerView = pickerView;
     
     cell.textLabel.textColor = textNormalColor;
-    cell.textLabel.font = regular14;
+    cell.textLabel.font = medium14;
     
     cell.detailTextLabel.textColor = textNormalColor;
-    cell.detailTextLabel.font = regular14;
+    cell.detailTextLabel.font = medium14;
     
     cell.textField.textColor = textNormalColor;
-    cell.textField.font = regular14;
+    cell.textField.font = medium14;
     
     cell.imageView.image = self.image;
 

@@ -75,7 +75,7 @@
         cell.detailTextLabel.text = [_value description];
     }
     //
-    cell.detailTextLabel.font = regular14;
+    cell.detailTextLabel.font = medium14;
     cell.detailTextLabel.textColor = textNormalColor;
     //
     cell.imageView.image = _image;

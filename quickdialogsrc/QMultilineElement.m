@@ -46,11 +46,11 @@
         cell.textLabel.text = [[cell.textLabel.text substringToIndex:30] stringByAppendingFormat:@"..."];
     }
     cell.textLabel.textColor = textNormalColor;
-    cell.textLabel.font = regular14;
+    cell.textLabel.font = medium14;
     cell.detailTextLabel.textColor = textSubtitleListColor;
-    cell.detailTextLabel.font = regular14;
+    cell.detailTextLabel.font = medium14;
     cell.textField.textColor = textNormalColor;
-    cell.textField.font = regular14;
+    cell.textField.font = medium14;
     //
     cell.textField.hidden = YES;
     //
