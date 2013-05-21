@@ -93,7 +93,7 @@
     if (_title!= nil)
         cell.textLabel.text = _title;
     
-    cell.textLabel.font = medium14;
+    cell.textLabel.font = regular14;
     cell.textLabel.textColor = textNormalColor;
     return cell;
 }

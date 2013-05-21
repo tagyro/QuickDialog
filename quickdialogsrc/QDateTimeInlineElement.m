@@ -70,13 +70,13 @@
         cell = [[QDateEntryTableViewCell alloc] init];
     }
     
-    cell.textField.font = medium14;
+    cell.textField.font = regular14;
     cell.textField.textColor = textNormalColor;
     
-    cell.detailTextLabel.font = medium14;
+    cell.detailTextLabel.font = regular14;
     cell.detailTextLabel.textColor = textNormalColor;
     
-    cell.textLabel.font = medium14;
+    cell.textLabel.font = regular14;
     cell.textLabel.textColor = textNormalColor;
     
     [cell prepareForElement:self inTableView:tableView];

@@ -81,7 +81,7 @@
         for (QElement *el in _entryElement.parentSection.elements){
             if ([el isKindOfClass:[QEntryElement class]]){
                 QEntryElement *q = (QEntryElement*)el;
-                self.textLabel.font = medium14;
+                self.textLabel.font = regular14;
                 self.textLabel.textColor = textNormalColor;
                 CGFloat imageWidth = q.image == NULL ? 0 : q.image.size.width + 10;  
                 CGFloat fontSize = self.textLabel.font.pointSize == 0? 17 : self.textLabel.font.pointSize;

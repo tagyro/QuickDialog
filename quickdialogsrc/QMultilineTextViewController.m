@@ -45,7 +45,7 @@
         [backView addSubview:_textView];
         _textView.delegate = self;
         //_textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        _textView.font = medium14;//[UIFont systemFontOfSize:18.0f];
+        _textView.font = regular14;//[UIFont systemFontOfSize:18.0f];
         _textView.backgroundColor = [UIColor clearColor];
         UIImageView *undeView = [[UIImageView alloc] initWithFrame:CGRectMake(8, 38, 304, _textView.frame.size.height+4)];
         [undeView setImage:[[UIImage imageNamed:@"assets/search/inputSingle"] resizableImageWithCapInsets:UIEdgeInsetsMake(15, 15, 15, 15)]];
@@ -53,7 +53,7 @@
         //
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 260, 30)];
         [label setText:self.title];
-        label.font = medium12;
+        label.font = regular12;
         label.textColor = textNormalColor;
         label.backgroundColor = [UIColor clearColor];
         label.numberOfLines = 2;
@@ -76,7 +76,7 @@
     //
     if (_maximumLength>0) {
         _counter = [[UILabel alloc] initWithFrame:CGRectMake(265, 5, 50, 30)];
-        _counter.font = medium10;
+        _counter.font = regular10;
         _counter.textColor = textSubtitleListColor;
         _counter.backgroundColor = [UIColor clearColor];
         _counter.text = [NSString stringWithFormat:@"%d/%d",_textView.text.length,_maximumLength];
